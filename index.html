@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>제주 픽셀 퀘스트 | 레트로 여행 가이드</title>
+  <meta name="description" content="게임처럼 모험하는 제주도 여행 가이드! 게스트하우스, 맛집, 액티비티, 여행 명소를 8비트 레트로 테마로 만나보세요.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="game-container">
+    
+    <!-- ==========================================
+         HEADER: 게임 타이틀 및 오디오 컨트롤
+         ========================================== -->
+    <header class="pixel-box">
+      <div class="logo-container">
+        <img class="logo-pixel" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><rect x='5' y='1' width='6' height='1' fill='%23ff9f1c'/><rect x='4' y='2' width='8' height='1' fill='%23ff9f1c'/><rect x='3' y='3' width='10' height='2' fill='%23ff9f1c'/><rect x='2' y='5' width='12' height='6' fill='%23ff9f1c'/><rect x='3' y='11' width='10' height='2' fill='%23ff9f1c'/><rect x='4' y='13' width='8' height='1' fill='%23ff9f1c'/><rect x='5' y='14' width='6' height='1' fill='%23ff9f1c'/><rect x='4' y='6' width='2' height='2' fill='%23000'/><rect x='10' y='6' width='2' height='2' fill='%23000'/><rect x='7' y='10' width='2' height='1' fill='%23000'/></svg>" alt="감귤 캐릭터">
+        <div>
+          <h1 class="logo-text">JEJU PIXEL QUEST</h1>
+          <p class="logo-sub">모험가를 위한 제주도 트레블 테크 가이드</p>
+        </div>
+      </div>
+      
+      <div class="audio-controls">
+        <button id="sound-btn" class="sound-toggle-btn" aria-label="사운드 켜기/끄기" title="8비트 사운드 효과">
+          🔊
+        </button>
+      </div>
+    </header>
+
+    <!-- ==========================================
+         MAIN AREA: 지도가 포함된 게임 보드 & 콘텐츠
+         ========================================== -->
+    <main>
+      
+      <!-- 1. 제주 픽셀 맵 영역 -->
+      <section class="pixel-box highlight-blue map-section" id="map-section">
+        <div class="map-section-title">
+          <h2>월드 맵 (WORLD MAP)</h2>
+          <span class="hint">지도의 각 영역을 클릭하여 순간이동해 보세요!</span>
+        </div>
+        
+        <div class="jeju-svg-container">
+          <svg class="jeju-svg" viewBox="0 0 600 350" xmlns="http://www.w3.org/2000/svg">
+            <!-- Grid Lines in Background -->
+            <defs>
+              <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+                <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect width="600" height="350" fill="url(#grid)" />
+            
+            <!-- Ocean details (floating pixel ripples) -->
+            <rect x="80" y="80" width="10" height="4" fill="#00e5ff" opacity="0.3" />
+            <rect x="500" y="100" width="15" height="4" fill="#00e5ff" opacity="0.3" />
+            <rect x="140" y="290" width="8" height="4" fill="#00e5ff" opacity="0.3" />
+            <rect x="420" y="270" width="12" height="4" fill="#00e5ff" opacity="0.3" />
+            
+            <!-- Sky Details (Pixel Clouds) -->
+            <path d="M 60 40 h 30 v 10 h -30 z M 70 30 h 10 v 10 h -10 z" fill="#ffffff" opacity="0.25"/>
+            <path d="M 440 50 h 40 v 10 h -40 z M 455 40 h 20 v 10 h -20 z" fill="#ffffff" opacity="0.25"/>
+
+            <!-- JEJU ISLAND REGIONS -->
+            <g id="jeju-regions">
+              <!-- North Region -->
+              <polygon id="region-north" class="svg-region" points="180,140 220,100 380,100 420,140 300,180" data-region="north" />
+              <!-- East Region -->
+              <polygon id="region-east" class="svg-region" points="420,140 480,160 520,200 460,240 300,180" data-region="east" />
+              <!-- South Region -->
+              <polygon id="region-south" class="svg-region" points="300,180 460,240 380,280 220,280 180,220" data-region="south" />
+              <!-- West Region -->
+              <polygon id="region-west" class="svg-region" points="180,140 300,180 180,220 100,200 120,150" data-region="west" />
+            </g>
+
+            <!-- Landmarks -->
+            <!-- Hallasan (Center Volcano) -->
+            <g transform="translate(0, 0)">
+              <polygon points="285,190 315,190 300,165" fill="#4d3b32" stroke="#000" stroke-width="2" />
+              <polygon points="293,177 307,177 300,165" fill="#ffffff" />
+              <text x="300" y="202" font-family="DungGeunMo" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold" filter="drop-shadow(1px 1px 0px #000)">한라산</text>
+            </g>
+
+            <!-- Region Text Overlay Labels -->
+            <text x="300" y="125" class="region-label" text-anchor="middle">북부 (제주시)</text>
+            <text x="430" y="195" class="region-label" text-anchor="middle">동부 (성산)</text>
+            <text x="315" y="255" class="region-label" text-anchor="middle">남부 (서귀포)</text>
+            <text x="175" y="185" class="region-label" text-anchor="middle">서부 (협재)</text>
+
+            <!-- Interactive Map Pins -->
+            <!-- North Pins -->
+            <g class="map-pin" data-spot="spot2" transform="translate(250,125)">
+              <circle r="7" />
+              <text y="4">🍖</text>
+            </g>
+            <g class="map-pin" data-spot="spot9" transform="translate(320,120)">
+              <circle r="7" />
+              <text y="4">☕</text>
+            </g>
+            <!-- East Pins -->
+            <g class="map-pin" data-spot="spot1" transform="translate(460,175)">
+              <circle r="7" />
+              <text y="4">🏠</text>
+            </g>
+            <g class="map-pin" data-spot="spot7" transform="translate(440,210)">
+              <circle r="7" />
+              <text y="4">🍊</text>
+            </g>
+            <g class="map-pin" data-spot="spot5" transform="translate(490,160)">
+              <circle r="7" />
+              <text y="4">🏡</text>
+            </g>
+            <!-- South Pins -->
+            <g class="map-pin" data-spot="spot4" transform="translate(360,240)">
+              <circle r="7" />
+              <text y="4">🌲</text>
+            </g>
+            <g class="map-pin" data-spot="spot6" transform="translate(290,245)">
+              <circle r="7" />
+              <text y="4">🍘</text>
+            </g>
+            <!-- West Pins -->
+            <g class="map-pin" data-spot="spot3" transform="translate(150,175)">
+              <circle r="7" />
+              <text y="4">🏄</text>
+            </g>
+            <g class="map-pin" data-spot="spot8" transform="translate(140,205)">
+              <circle r="7" />
+              <text y="4">💨</text>
+            </g>
+          </svg>
+        </div>
+        
+        <!-- Map corner overlay coordinate -->
+        <div class="map-status-overlay">
+          현재 위치: <span id="current-region-display">전체 섬 (ALL ISLAND)</span>
+        </div>
+      </section>
+
+      <!-- 2. 여행지 리스트 및 필터 필드 -->
+      <section class="pixel-box cards-section">
+        <div class="filters-wrapper">
+          <div class="category-tabs" role="tablist">
+            <button class="category-tab active" data-category="all" role="tab" aria-selected="true">
+              <i>🗺️</i> 전체
+            </button>
+            <button class="category-tab" data-category="guesthouse" role="tab" aria-selected="false">
+              <i>🏠</i> 게스트하우스
+            </button>
+            <button class="category-tab" data-category="restaurant" role="tab" aria-selected="false">
+              <i>🍖</i> 맛집
+            </button>
+            <button class="category-tab" data-category="activity" role="tab" aria-selected="false">
+              <i>🍊</i> 액티비티
+            </button>
+            <button class="category-tab" data-category="spot" role="tab" aria-selected="false">
+              <i>🌲</i> 여행스팟
+            </button>
+          </div>
+          
+          <div class="search-filter-box">
+            <input type="text" id="search-bar" class="search-input" placeholder="스팟 이름 검색...">
+            <button id="reset-filter-btn" class="pixel-btn btn-orange" style="font-size: 0.8rem; padding: 0.5rem 0.8rem;">초기화</button>
+          </div>
+        </div>
+
+        <!-- 카드 격자판 -->
+        <div class="cards-grid" id="cards-container">
+          <!-- JS가 동적으로 카드를 렌더링함 -->
+        </div>
+      </section>
+    </main>
+
+    <!-- ==========================================
+         ASIDE: 플레이어 스탯 & 퀘스트 로그
+         ========================================== -->
+    <aside>
+      
+      <!-- 플레이어 스탯창 -->
+      <section class="stat-box">
+        <div class="stat-header">
+          <h3 class="stat-title">PLAYER STATUS</h3>
+          <span style="font-size: 0.8rem; color: var(--accent-green);">ONLINE</span>
+        </div>
+        
+        <div class="player-info">
+          <div class="player-avatar">🧙</div>
+          <div class="player-details">
+            <span class="player-name">제주바이브러버</span>
+            <span class="player-title">Lv.15 낭만 방랑가</span>
+          </div>
+        </div>
+        
+        <div class="stat-bar-container">
+          <div class="stat-row">
+            <div class="stat-label">
+              <span>HP (체력)</span>
+              <span>85 / 100</span>
+            </div>
+            <div class="stat-bar">
+              <div class="stat-fill hp" id="player-hp-bar" style="width: 85%;"></div>
+            </div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-label">
+              <span>XP (여행 경험치)</span>
+              <span>650 / 1000</span>
+            </div>
+            <div class="stat-bar">
+              <div class="stat-fill xp" id="player-xp-bar" style="width: 65%;"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- 퀘스트 로그 -->
+      <section class="quest-box">
+        <div class="quest-header">
+          <h3>QUEST LOG</h3>
+          <span>🎯</span>
+        </div>
+        <ul class="quest-list" id="quest-list-container">
+          <!-- JS가 동적으로 퀘스트 아이템을 렌더링함 -->
+        </ul>
+      </section>
+
+    </aside>
+
+    <!-- ==========================================
+         FOOTER: 게임 콘솔 패드 느낌의 하단바
+         ========================================== -->
+    <footer class="pixel-box">
+      <div class="console-pad">
+        <div class="d-pad" aria-hidden="true">
+          <div class="d-pad-btn up"></div>
+          <div class="d-pad-btn left"></div>
+          <div class="d-pad-btn right"></div>
+          <div class="d-pad-btn down"></div>
+          <div class="d-pad-btn center"></div>
+        </div>
+        <div style="font-size: 0.8rem; color: #8e94a8; font-family: var(--font-pixel-en);">D-PAD</div>
+      </div>
+      
+      <div class="footer-center">
+        <p>© 2026 JEJU PIXEL QUEST. All Rights Reserved.</p>
+        <p>Powered by <a href="#" target="_blank">Vibe Coding Engine</a></p>
+      </div>
+      
+      <div class="console-btns">
+        <div class="console-btn-b" title="B 버튼">B</div>
+        <div class="console-btn-a" title="A 버튼">A</div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ==========================================
+       RPG DIALOG MODAL: 대화 상자 모달
+       ========================================== -->
+  <div class="dialog-modal" id="dialog-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="rpg-dialog-box">
+      <div class="dialog-header">
+        <span class="dialog-category" id="modal-category">CATEGORY</span>
+        <h3 class="dialog-title" id="modal-title">스팟 이름</h3>
+        <button class="dialog-close" id="modal-close-btn" aria-label="창 닫기">SELECT [X]</button>
+      </div>
+      
+      <div class="dialog-content">
+        <div class="dialog-text-wrapper">
+          <span class="dialog-text" id="modal-text"></span>
+          <span class="dialog-cursor" id="modal-cursor"></span>
+        </div>
+        
+        <div class="dialog-meta">
+          <div class="dialog-meta-item">
+            <span class="dialog-meta-label">📍 위치 주소</span>
+            <span class="dialog-meta-value" id="modal-address">제주도 어딘가</span>
+          </div>
+          <div class="dialog-meta-item">
+            <span class="dialog-meta-label">🪙 모험 비용</span>
+            <span class="dialog-meta-value highlight-green" id="modal-price">35,000원</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="dialog-actions">
+        <button id="modal-action-btn" class="pixel-btn btn-orange">퀘스트 추가</button>
+        <button id="modal-confirm-btn" class="pixel-btn">대화 종료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       JAVASCRIPT: 데이터 바인딩, 필터 및 효과음 합성
+       ========================================== -->
+  <script>
+    // 1. 추천 데이터베이스 정의
+    const places = [
+      {
+        id: "spot1",
+        name: "산호 방랑자 게스트하우스",
+        category: "guesthouse",
+        region: "east",
+        regionKo: "동부 (성산/우도)",
+        icon: "🏠",
+        desc: "성산 일출봉 근처의 따뜻한 감성 게스트하우스. 저녁에는 은은한 8비트 음악과 함께 소셜 파티가 열립니다.",
+        rating: "4.8",
+        price: "35,000원",
+        addr: "제주시 성산읍 일출로 288",
+        detail: "조용히 책을 읽을 수 있는 북카페와 아늑한 다락방 침실이 특징입니다. 저녁 파티는 소박하게 진행되며, 아침에는 직접 구운 토스트와 감귤 주스를 제공합니다. RPG 게임 테마의 인테리어로 꾸며져 모험을 떠나기 전 휴식을 취하기 최적입니다."
+      },
+      {
+        id: "spot2",
+        name: "애월 해적단 흑돼지",
+        category: "restaurant",
+        region: "north",
+        regionKo: "북부 (제주시)",
+        icon: "🍖",
+        desc: "바다 바로 앞에서 먹는 연탄 초벌 흑돼지구이. 육즙 가득한 도톰한 고기와 전복 해물라면이 추천 메뉴입니다.",
+        rating: "4.9",
+        price: "54,000원",
+        addr: "제주시 애월읍 애월해안로 490",
+        detail: "신선한 1등급 제주산 흑돼지만을 엄선하여 고유의 풍미를 느낄 수 있습니다. 바다 위로 지는 노을을 바라보며 시원한 제주 에일을 곁들이면 한 마리의 해적이 된 듯한 느낌을 줍니다. 시그니처 멜젓 소스는 이곳만의 자랑입니다."
+      },
+      {
+        id: "spot3",
+        name: "협재 픽셀 서핑 스쿨",
+        category: "activity",
+        region: "west",
+        regionKo: "서부 (협재/한림)",
+        icon: "🏄‍♂️",
+        desc: "에메랄드빛 협재 바다에서 즐기는 서핑 강습. 초보자 전용 1:1 집중 튜토리얼 코스가 마련되어 있습니다.",
+        rating: "4.7",
+        price: "60,000원",
+        addr: "제주시 한림읍 한림로 329",
+        detail: "경력 10년 이상의 프로 서퍼들이 친절하게 패들링부터 테이크오프까지 전수해 드립니다. 강습 후에는 멋진 인생샷 촬영 서비스가 기본 포함되어 있습니다. 바다 위를 가르며 윈드서핑 퀘스트를 완료해 보세요!"
+      },
+      {
+        id: "spot4",
+        name: "사려니 비밀의 숲",
+        category: "spot",
+        region: "south",
+        regionKo: "남부 (서귀포)",
+        icon: "🌲",
+        desc: "붉은 흙길과 하늘 높이 뻗은 삼나무가 장관을 이루는 힐링 산책 코스. 신비로운 안개가 낄 때 가장 아름답습니다.",
+        rating: "4.9",
+        price: "무료",
+        addr: "서귀포시 표선면 번영로 122",
+        detail: "자연 그대로의 삼나무 숲길을 걷다 보면 마치 판타지 RPG 속의 요정의 숲에 들어온 듯한 몽환적인 분위기를 자아냅니다. 맑은 공기와 피톤치드가 가득해 일상에 지친 스트레스를 해소하고 영혼의 마나(Mana)를 채워 가기에 가장 좋습니다."
+      },
+      {
+        id: "spot5",
+        name: "우도 코랄베이 게스트하우스",
+        category: "guesthouse",
+        region: "east",
+        regionKo: "동부 (성산/우도)",
+        icon: "🏡",
+        desc: "우도 검멀레 해변 앞 아기자기한 도미토리. 아침마다 보트 투어 할인 퀘스트를 제공합니다.",
+        rating: "4.6",
+        price: "32,000원",
+        addr: "우도면 연평리 110",
+        detail: "아름다운 일몰을 자랑하는 우도에 위치하여 밤이 되면 쏟아지는 별빛을 감상할 수 있습니다. 자전거 대여 및 전기차 렌탈 할인 퀘스트를 완수하면 우도 전역을 모험할 수 있는 최고의 전초기지입니다."
+      },
+      {
+        id: "spot6",
+        name: "서귀포 올레시장 흑돼지고로케",
+        category: "restaurant",
+        region: "south",
+        regionKo: "남부 (서귀포)",
+        icon: "🍘",
+        desc: "올레시장 최고 인기 먹거리. 겉은 바삭하고 속은 꽉 찬 흑돼지 고로케입니다.",
+        rating: "4.8",
+        price: "4,000원",
+        addr: "서귀포시 중앙로 62번길 18",
+        detail: "매일 한정 수량만 직접 손으로 빚어 튀겨내는 수제 고로케로, 특제 매운 소스와 감귤 소스 중 선택할 수 있습니다. 시장 투어 퀘스트 수행 시 무조건 먹어야 하는 시그니처 길거리 음식입니다."
+      },
+      {
+        id: "spot7",
+        name: "감귤 서리 체험 (동백 농원)",
+        category: "activity",
+        region: "east",
+        regionKo: "동부 (성산/우도)",
+        icon: "🍊",
+        desc: "겨울철 필수 퀘스트! 새콤달콤한 제주 감귤을 무제한으로 따먹고 바구니 한가득 채워가는 체험 농장.",
+        rating: "4.7",
+        price: "15,000원",
+        addr: "서귀포시 남원읍 신흥리 293",
+        detail: "농장주 NPC의 친절한 설명을 들은 후 감귤 따기 가위를 지급받아 나만의 수확 퀘스트를 시작합니다. 딴 귤은 현장에서 무제한 시식이 가능하며, 1.5kg의 귤을 가득 채워 집으로 가져갈 수 있습니다."
+      },
+      {
+        id: "spot8",
+        name: "신창 풍차 해안도로",
+        category: "spot",
+        region: "west",
+        regionKo: "서부 (협재/한림)",
+        icon: "💨",
+        desc: "거대한 풍력 발전기들과 푸른 바다가 어우러진 해안 산책로. 제주 최고의 선셋 스팟 중 하나입니다.",
+        rating: "4.9",
+        price: "무료",
+        addr: "제주시 한경면 신창리 132",
+        detail: "해상교량을 걸으며 풍차 바로 아래서 불어오는 제주의 시원한 바람을 온몸으로 느낄 수 있습니다. 붉게 타오르는 저녁 노을과 풍차의 실루엣은 마치 한 폭의 레트로 일러스트를 연상시키며, 서부 모험의 완벽한 마무리를 선사합니다."
+      },
+      {
+        id: "spot9",
+        name: "탑동 픽셀 빈티지 카페",
+        category: "restaurant",
+        region: "north",
+        regionKo: "북부 (제주시)",
+        icon: "☕",
+        desc: "옛 목욕탕 건물을 개조한 레트로 감성 가득한 에스프레소 바. 픽셀 아트 굿즈샵을 겸하고 있습니다.",
+        rating: "4.5",
+        price: "6,000원",
+        addr: "제주시 탑동로 22",
+        detail: "아날로그 브라운관 TV와 고전 게임 콘솔들이 인테리어로 꾸며져 있으며, 시그니처 픽셀 아인슈페너는 초코칩으로 8비트 하트를 그려 제공합니다. 현지 로컬 아티스트들의 픽셀 스티커와 포스터도 구경할 수 있습니다."
+      }
+    ];
+
+    // 2. 초기 퀘스트 상태 정의
+    let activeQuests = [
+      { id: "q1", title: "제주 모험의 시작", desc: "제주공항에 무사히 발을 딛기", completed: true, xp: 100 },
+      { id: "q2", title: "로컬 맛집 토벌", desc: "애월 해적단 흑돼지 식사하기", completed: false, xp: 250, targetSpotId: "spot2" },
+      { id: "q3", title: "바다 정복 퀘스트", desc: "협재 픽셀 서핑 참가하기", completed: false, xp: 300, targetSpotId: "spot3" }
+    ];
+
+    // 3. 상태 관리 변수
+    let currentCategory = "all";
+    let currentRegion = "all";
+    let searchQuery = "";
+    let isSoundEnabled = false;
+
+    // 4. Web Audio API를 사용한 8비트 오디오 신디사이저 엔진
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    // 소리 재생 도우미
+    function playBeep(freq, type, duration, delay = 0) {
+      if (!isSoundEnabled) return;
+      initAudio();
+      
+      const osc = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      
+      osc.type = type || 'square';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
+      
+      gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime + delay);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + delay + duration);
+      
+      osc.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      
+      osc.start(audioCtx.currentTime + delay);
+      osc.stop(audioCtx.currentTime + delay + duration);
+    }
+
+    // 8비트 클릭 효과음
+    function playClickSound() {
+      playBeep(600, 'square', 0.08);
+      playBeep(900, 'square', 0.12, 0.04);
+    }
+
+    // RPG 대화 타이핑 효과음
+    function playTypeSound() {
+      playBeep(Math.random() * 200 + 400, 'triangle', 0.04);
+    }
+
+    // 퀘스트 완료 축하 효과음 (아르페지오)
+    function playQuestCompleteSound() {
+      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5 -> E5 -> G5 -> C6
+      notes.forEach((freq, index) => {
+        playBeep(freq, 'sine', 0.15, index * 0.1);
+      });
+    }
+
+    // 모달 닫기 효과음
+    function playCloseSound() {
+      playBeep(800, 'triangle', 0.08);
+      playBeep(400, 'triangle', 0.12, 0.06);
+    }
+
+    // 5. 추천 카드 렌더링 엔진
+    const cardsContainer = document.getElementById("cards-container");
+
+    function renderCards() {
+      const filtered = places.filter(place => {
+        const matchesCategory = currentCategory === "all" || place.category === currentCategory;
+        const matchesRegion = currentRegion === "all" || place.region === currentRegion;
+        const matchesSearch = place.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                              place.desc.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesCategory && matchesRegion && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        cardsContainer.innerHTML = `
+          <div class="pixel-box" style="grid-column: 1 / -1; text-align: center; color: #8e94a8;">
+            <p>검색 결과에 맞는 모험지를 찾지 못했습니다.</p>
+            <p style="font-size:0.8rem; margin-top:0.5rem; color:var(--accent-orange);">월드맵에서 다른 영역을 클릭하거나 필터를 초기화해 보세요!</p>
+          </div>
+        `;
+        return;
+      }
+
+      cardsContainer.innerHTML = filtered.map(place => {
+        const categoryMap = {
+          guesthouse: "게스트하우스",
+          restaurant: "맛집",
+          activity: "액티비티",
+          spot: "여행스팟"
+        };
+        
+        // 퀘스트 진행여부 확인
+        const isQuestTarget = activeQuests.some(q => q.targetSpotId === place.id && !q.completed);
+        const questIndicator = isQuestTarget ? `<span class="card-tag" style="background:#000; border-color:var(--accent-green); color:var(--accent-green);">ACTIVE QUEST</span>` : `<span class="card-tag">${categoryMap[place.category]}</span>`;
+
+        return `
+          <article class="card-item" data-id="${place.id}">
+            <div class="card-image-placeholder">
+              <span class="card-image-icon">${place.icon}</span>
+              ${questIndicator}
+              <span class="card-region-tag">${place.regionKo.split(' ')[0]}</span>
+            </div>
+            <div class="card-content">
+              <h3 class="card-title">${place.name}</h3>
+              <p class="card-desc">${place.desc}</p>
+              <div class="card-rating">⭐ ${place.rating} / 5.0</div>
+              <div class="card-footer">
+                <span class="card-price">${place.price}</span>
+                <button class="card-btn" data-action="detail" data-id="${place.id}">상세 보기 [A]</button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      // 이벤트 리스너 추가
+      document.querySelectorAll(".card-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const id = btn.getAttribute("data-id");
+          openDialog(id);
+        });
+      });
+
+      document.querySelectorAll(".card-item").forEach(card => {
+        card.addEventListener("click", () => {
+          const id = card.getAttribute("data-id");
+          openDialog(id);
+        });
+      });
+    }
+
+    // 6. 퀘스트 로그 렌더링 엔진
+    const questListContainer = document.getElementById("quest-list-container");
+
+    function renderQuests() {
+      questListContainer.innerHTML = activeQuests.map(quest => {
+        const checkIcon = quest.completed ? "☑️" : "🟩";
+        const completeClass = quest.completed ? "completed" : "";
+        return `
+          <li class="quest-item ${completeClass}" id="quest-${quest.id}">
+            <div class="quest-title-text">
+              <span>${checkIcon}</span> <span class="quest-title-inner">${quest.title}</span>
+            </div>
+            <div class="quest-desc-text">${quest.desc}</div>
+            <div class="quest-reward">+${quest.xp} XP</div>
+          </li>
+        `;
+      }).join('');
+    }
+
+    // 7. RPG 대화 상자 모달 구현
+    const dialogModal = document.getElementById("dialog-modal");
+    const modalCategory = document.getElementById("modal-category");
+    const modalTitle = document.getElementById("modal-title");
+    const modalText = document.getElementById("modal-text");
+    const modalAddress = document.getElementById("modal-address");
+    const modalPrice = document.getElementById("modal-price");
+    const modalActionBtn = document.getElementById("modal-action-btn");
+    const modalConfirmBtn = document.getElementById("modal-confirm-btn");
+    const modalCloseBtn = document.getElementById("modal-close-btn");
+    
+    let typingTimer = null;
+    let isTyping = false;
+    let fullText = "";
+
+    function openDialog(spotId) {
+      playClickSound();
+      const place = places.find(p => p.id === spotId);
+      if (!place) return;
+
+      modalCategory.textContent = place.regionKo;
+      modalTitle.textContent = place.name;
+      modalAddress.textContent = place.addr;
+      modalPrice.textContent = place.price;
+      fullText = place.detail;
+
+      // 퀘스트 추가 버튼 셋업
+      const isAlreadyQuest = activeQuests.some(q => q.targetSpotId === place.id);
+      if (isAlreadyQuest) {
+        const quest = activeQuests.find(q => q.targetSpotId === place.id);
+        if (quest.completed) {
+          modalActionBtn.textContent = "퀘스트 완료됨";
+          modalActionBtn.disabled = true;
+        } else {
+          modalActionBtn.textContent = "퀘스트 완료하기";
+          modalActionBtn.disabled = false;
+          modalActionBtn.onclick = () => completeQuest(quest.id);
+        }
+      } else {
+        modalActionBtn.textContent = "퀘스트 로그 추가";
+        modalActionBtn.disabled = false;
+        modalActionBtn.onclick = () => addNewQuest(place);
+      }
+
+      dialogModal.classList.add("active");
+      
+      // 타이프라이터 효과 시작
+      isTyping = true;
+      modalText.textContent = "";
+      let index = 0;
+      clearInterval(typingTimer);
+      
+      typingTimer = setInterval(() => {
+        if (index < fullText.length) {
+          modalText.textContent += fullText[index];
+          index++;
+          if (index % 2 === 0) {
+            playTypeSound();
+          }
+        } else {
+          clearInterval(typingTimer);
+          isTyping = false;
+        }
+      }, 25);
+    }
+
+    function closeDialog() {
+      playCloseSound();
+      clearInterval(typingTimer);
+      dialogModal.classList.remove("active");
+    }
+
+    // 모달을 클릭하면 타이핑 효과 즉시 완료
+    dialogModal.querySelector(".rpg-dialog-box").addEventListener("click", (e) => {
+      // 버튼 클릭 등은 무시
+      if (e.target.tagName === 'BUTTON') return;
+      if (isTyping) {
+        clearInterval(typingTimer);
+        modalText.textContent = fullText;
+        isTyping = false;
+      }
+    });
+
+    // 퀘스트 추가 함수
+    function addNewQuest(place) {
+      playClickSound();
+      const newQuest = {
+        id: "q_" + Date.now(),
+        title: `${place.name} 탐험`,
+        desc: `${place.name}에 방문하여 대화 퀘스트 완료하기`,
+        completed: false,
+        xp: 150,
+        targetSpotId: place.id
+      };
+      activeQuests.push(newQuest);
+      renderQuests();
+      renderCards();
+      
+      // 플레이어 HP/XP 바 갱신 시뮬레이션
+      updatePlayerBars();
+      
+      modalActionBtn.textContent = "퀘스트 완료하기";
+      modalActionBtn.onclick = () => completeQuest(newQuest.id);
+    }
+
+    // 퀘스트 완료 처리
+    function completeQuest(questId) {
+      playQuestCompleteSound();
+      const quest = activeQuests.find(q => q.id === questId);
+      if (quest) {
+        quest.completed = true;
+        renderQuests();
+        renderCards();
+        
+        // 경험치 및 체력 스탯 갱신 애니메이션
+        const xpBar = document.getElementById("player-xp-bar");
+        const hpBar = document.getElementById("player-hp-bar");
+        
+        xpBar.style.width = "95%"; // 경험치 증가 시뮬레이션
+        hpBar.style.width = "100%"; // 힐
+        
+        setTimeout(() => {
+          xpBar.style.width = "20%"; // 레벨업 시뮬레이션
+          document.querySelector(".player-title").textContent = "Lv.16 전설의 방랑가";
+        }, 1500);
+
+        modalActionBtn.textContent = "퀘스트 완료됨";
+        modalActionBtn.disabled = true;
+      }
+    }
+
+    function updatePlayerBars() {
+      // 간단한 인터랙션에 따른 스탯 업데이트 효과
+      const hpBar = document.getElementById("player-hp-bar");
+      const currentWidth = parseInt(hpBar.style.width);
+      if (currentWidth > 50) {
+        hpBar.style.width = (currentWidth - 10) + "%";
+      } else {
+        hpBar.style.width = "90%";
+      }
+    }
+
+    modalConfirmBtn.addEventListener("click", closeDialog);
+    modalCloseBtn.addEventListener("click", closeDialog);
+
+    // 8. 지도 권역 클릭 인터랙션
+    const regions = document.querySelectorAll(".svg-region");
+    const currentRegionDisplay = document.getElementById("current-region-display");
+
+    regions.forEach(region => {
+      region.addEventListener("click", () => {
+        playClickSound();
+        const selected = region.getAttribute("data-region");
+        const regionKoMap = {
+          north: "북부 (제주시)",
+          east: "동부 (성산/우도)",
+          south: "남부 (서귀포)",
+          west: "서부 (협재/한림)"
+        };
+
+        // 토글 동작
+        if (currentRegion === selected) {
+          currentRegion = "all";
+          regions.forEach(r => r.classList.remove("active"));
+          currentRegionDisplay.textContent = "전체 섬 (ALL ISLAND)";
+        } else {
+          currentRegion = selected;
+          regions.forEach(r => r.classList.remove("active"));
+          region.classList.add("active");
+          currentRegionDisplay.textContent = regionKoMap[selected];
+        }
+
+        renderCards();
+      });
+    });
+
+    // 지도 핀 클릭 인터랙션
+    document.querySelectorAll(".map-pin").forEach(pin => {
+      pin.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const spotId = pin.getAttribute("data-spot");
+        
+        // 핀에 해당하는 영역 액티브화
+        const spot = places.find(p => p.id === spotId);
+        if (spot) {
+          const regionPolygon = document.getElementById(`region-${spot.region}`);
+          if (regionPolygon) {
+            regions.forEach(r => r.classList.remove("active"));
+            regionPolygon.classList.add("active");
+            currentRegion = spot.region;
+            const regionKoMap = {
+              north: "북부 (제주시)",
+              east: "동부 (성산/우도)",
+              south: "남부 (서귀포)",
+              west: "서부 (협재/한림)"
+            };
+            currentRegionDisplay.textContent = regionKoMap[spot.region];
+          }
+        }
+        
+        openDialog(spotId);
+      });
+    });
+
+    // 9. 카테고리 탭 클릭 인터랙션
+    const tabs = document.querySelectorAll(".category-tab");
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        playClickSound();
+        tabs.forEach(t => {
+          t.classList.remove("active");
+          t.setAttribute("aria-selected", "false");
+        });
+        tab.classList.add("active");
+        tab.setAttribute("aria-selected", "true");
+        currentCategory = tab.getAttribute("data-category");
+        renderCards();
+      });
+    });
+
+    // 10. 검색바 인터랙션
+    const searchBar = document.getElementById("search-bar");
+    searchBar.addEventListener("input", (e) => {
+      searchQuery = e.target.value;
+      renderCards();
+    });
+
+    // 필터 초기화 버튼
+    document.getElementById("reset-filter-btn").addEventListener("click", () => {
+      playClickSound();
+      searchQuery = "";
+      searchBar.value = "";
+      currentCategory = "all";
+      currentRegion = "all";
+      
+      tabs.forEach(t => {
+        t.classList.remove("active");
+        if(t.getAttribute("data-category") === "all") {
+          t.classList.add("active");
+          t.setAttribute("aria-selected", "true");
+        } else {
+          t.setAttribute("aria-selected", "false");
+        }
+      });
+      regions.forEach(r => r.classList.remove("active"));
+      currentRegionDisplay.textContent = "전체 섬 (ALL ISLAND)";
+      renderCards();
+    });
+
+    // 11. 사운드 온/오프 토글
+    const soundBtn = document.getElementById("sound-btn");
+    soundBtn.addEventListener("click", () => {
+      isSoundEnabled = !isSoundEnabled;
+      if (isSoundEnabled) {
+        initAudio();
+        soundBtn.textContent = "🔊";
+        soundBtn.style.color = "var(--accent-green)";
+        playClickSound();
+      } else {
+        soundBtn.textContent = "🔇";
+        soundBtn.style.color = "#8e94a8";
+      }
+    });
+
+    // 12. 초기화 실행
+    renderCards();
+    renderQuests();
+
+  </script>
+</body>
+</html>
